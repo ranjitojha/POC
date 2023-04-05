@@ -35,7 +35,7 @@ public class SteganographyController {
 		
 	}
 	
-	@RequestMapping(method = RequestMethod.POST,
+	@RequestMapping(method = RequestMethod.GET,
 			value="/generate/{wID}"
 			)
 	public ResponseEntity sendOTP(@PathVariable("wID") String wID) throws IOException {
