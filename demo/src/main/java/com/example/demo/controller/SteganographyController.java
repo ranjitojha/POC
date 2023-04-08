@@ -22,43 +22,61 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.demo.PushNS;
+import com.google.firebase.messaging.FirebaseMessagingException;
+
 @RestController
 @RequestMapping("/v1")
 public class SteganographyController {
 	
 	@RequestMapping(method = RequestMethod.GET,
-			value="/option/{wID}"
+			value="/option"
 			)
-	public ResponseEntity getSecurityPrefs(@PathVariable("wID") String wID) {
+	public ResponseEntity getSecurityPrefs() {
 		//logger.info("Get Security Prefs");
 		return new ResponseEntity("Get Security Prefs for PUSH Notification",HttpStatus.OK);
 		
 	}
 	
 	@RequestMapping(method = RequestMethod.GET,
-			value="/generate/{wID}"
+			value="/generate"
 			)
-	public ResponseEntity sendOTP(@PathVariable("wID") String wID) throws IOException {
+	public ResponseEntity sendOTP() throws IOException {
+		
+		
 		
 		//logger.info("Get Security Prefs");
 		String SixDigitNumber = getRandomNumberString();
 		//File classPathInput = new File(SteganographyController.class.getResource("static\\image\\cover.png").getFile());
-		File resource = new ClassPathResource("cover.jpg").getFile();
-		System.out.println(" resource @@@@@@@:           "+ resource.getAbsolutePath());
-        BufferedImage classpathImage = ImageIO.read(resource);
-        File file = Steganography.encode(classpathImage, SixDigitNumber);
-		//need to fire send push notification using file
-		
-		//logger.info("Six Digit OTP Send To Mobile");
-		return new ResponseEntity("Send OTP Six Digit Number : "+SixDigitNumber,HttpStatus.OK);
+		//File resource = new ClassPathResource("cover.JPG").getFile();
+		InputStream ip = getClass().getClassLoader().getResourceAsStream("cover.jpg");
+		System.out.println(" ip ######### "+ip.toString());
+		//File file = new File(getServletContext().getRealPath("/abc.txt"));
+       
+        if(ip!=null) {
+        	 BufferedImage classpathImage = ImageIO.read(ip);
+        	 File file = Steganography.encode(classpathImage, SixDigitNumber);
+        	//need to fire send push notification using file
+        	//logger.info("Six Digit OTP Send To Mobile");
+			/*
+			 * try { PushNS.sendToToken(); } catch (FirebaseMessagingException e) { // TODO
+			 * Auto-generated catch block e.printStackTrace(); }
+			 */
+     		return new ResponseEntity("Send OTP Six Digit Number : "+SixDigitNumber,HttpStatus.OK);
+     		
+        }
+        
+        
+        return new  ResponseEntity("File Error  : "+SixDigitNumber,HttpStatus.OK);
+	
 		
 	}
 	
 	
 	@RequestMapping(method = RequestMethod.POST,
-			value="/validate/{wID}"
+			value="/validate"
 			)
-	public ResponseEntity validateOTP(@PathVariable("wID") String wID,@RequestParam("file") MultipartFile file) throws IOException {
+	public ResponseEntity validateOTP(@RequestParam("file") MultipartFile file) throws IOException {
 		
 		System.out.println("----------------" + file);
 		if (file == null) {

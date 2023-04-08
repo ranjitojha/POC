@@ -21,7 +21,7 @@ public class PushNS {
     public static void sendToToken() throws FirebaseMessagingException {
         // [START send_to_token]
         // This registration token comes from the client FCM SDKs.
-        String registrationToken = "YOUR_REGISTRATION_TOKEN";
+        String registrationToken = "ehOb6e3mRoiutk9bvSypbm:APA91bFPDsOFdaxzeSDoa02M3nZG6vxj9y42kF3FFbftV_zyDFntzDr8eerg8v-zM0LuJEqoiQw11UhcDQhMStZQvu6UxzI_qIz2ZEjnY5DhtLLV7JodvBnWYO-lulk9lfS-W8peQHGp";
 
         // See documentation on defining a message payload.
         Message message = Message.builder()
@@ -77,9 +77,11 @@ public class PushNS {
         return message;
     }
 
-    public static void main(String[] args) throws FirebaseMessagingException {
-        //sendToToken();
-        sendDryRun();
-    }
+	/*
+	 * public static void main(String[] args) throws FirebaseMessagingException {
+	 * //sendToToken(); sendDryRun(); }
+	 */
+    
+    
 
 }
