@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.PushNS;
-import com.google.firebase.messaging.FirebaseMessagingException;
 
 @RestController
 @RequestMapping("/v1")
@@ -58,18 +57,21 @@ public class SteganographyController {
         	 File file = Steganography.encode(classpathImage, SixDigitNumber);
         	//need to fire send push notification using file
         	//logger.info("Six Digit OTP Send To Mobile");
-			/*
-			 * try { PushNS.sendToToken(); } catch (FirebaseMessagingException e) { // TODO
-			 * Auto-generated catch block e.printStackTrace(); }
-			 */
-     		return new ResponseEntity("Send OTP Six Digit Number : "+SixDigitNumber,HttpStatus.OK);
+			
+			try {
+				//PushNS.sendToToken();
+				PushNS.sendHttp();
+			} catch (Exception e) { 
+
+				//e.getCause();
+				e.printStackTrace();
+				return new ResponseEntity("File Error  : " + SixDigitNumber, HttpStatus.METHOD_FAILURE);
+			}
+			
      		
         }
-        
-        
-        return new  ResponseEntity("File Error  : "+SixDigitNumber,HttpStatus.OK);
+        return new ResponseEntity("Send OTP Six Digit Number : "+SixDigitNumber,HttpStatus.OK);
 	
-		
 	}
 	
 	
