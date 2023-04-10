@@ -9,6 +9,9 @@ handlers:
     secure: always
 manual_scaling:
     instances: 1
+    
+env_variables:
+    APP_STORAGE: /tmp
    
 resources:
     cpu: 2
