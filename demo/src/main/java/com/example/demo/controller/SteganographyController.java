@@ -14,15 +14,18 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.PushNS;
+import org.apache.commons.io.IOUtils;
 
 @RestController
 @RequestMapping("/v1")
@@ -37,6 +40,7 @@ public class SteganographyController {
 		
 	}
 	
+	@SuppressWarnings("unchecked")
 	@RequestMapping(method = RequestMethod.GET,
 			value="/generate"
 			)
@@ -55,17 +59,15 @@ public class SteganographyController {
         if(ip!=null) {
         	 BufferedImage classpathImage = ImageIO.read(ip);
         	 File file = Steganography.encode(classpathImage, SixDigitNumber);
-        	//need to fire send push notification using file
-        	//logger.info("Six Digit OTP Send To Mobile");
-			
+        				
 			try {
 				//PushNS.sendToToken();
-				PushNS.sendHttp();
+				PushNS.sendHttp(file.getName());
 			} catch (Exception e) { 
 
 				//e.getCause();
 				e.printStackTrace();
-				return new ResponseEntity("File Error  : " + SixDigitNumber, HttpStatus.METHOD_FAILURE);
+				return new ResponseEntity("File Error  : ", HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 			
      		
@@ -78,14 +80,12 @@ public class SteganographyController {
 	@RequestMapping(method = RequestMethod.POST,
 			value="/validate"
 			)
-	public ResponseEntity validateOTP(@RequestParam("file") MultipartFile file) throws IOException {
+	//public ResponseEntity validateOTP(@RequestParam("otp") String otp) throws IOException {
+	public ResponseEntity validateOTP(@RequestParam("otp") String otp) throws IOException {
+		System.out.println("----------------" + otp);
 		
-		System.out.println("----------------" + file);
-		if (file == null) {
-			throw new RuntimeException("You must select the a file for uploading");
-		}
 
-		InputStream inputStream = file.getInputStream();
+		/*InputStream inputStream = file.getInputStream();
 		String originalName = file.getOriginalFilename();
 		String name = file.getName();
 		System.out.println("Name" + name);
@@ -100,10 +100,44 @@ public class SteganographyController {
 		OutputStream outStream = new FileOutputStream(targetFile);
 		outStream.write(buffer);
 		
-		BufferedImage classpathImage = ImageIO.read(targetFile);
-		Steganography.decode(classpathImage, 6);
+		BufferedImage classpathImage = ImageIO.read(targetFile);*/
+		//Steganography.decode(classpathImage, 6);
 		
 		return new ResponseEntity("Successfully OTP validated",HttpStatus.OK);
+		
+	}
+	
+	@RequestMapping(method = RequestMethod.GET,
+			value="/image",
+			produces = MediaType.IMAGE_JPEG_VALUE
+			)
+	public @ResponseBody byte[] getImage(@RequestParam("url") String url) throws IOException {
+		
+		/*InputStream in = getClass()
+			      .getResourceAsStream("/com/baeldung/produceimage/image.jpg");
+			    return IOUtils.toByteArray(in);*/
+		
+		System.out.println("----------------" + url);
+		
+		File file = new File(System.getProperty("java.io.tmpdir")+"/"+url);
+		FileInputStream fis = new FileInputStream(file);
+		return IOUtils.toByteArray(fis);
+	   /* if(file.exists()) {
+	        String contentType = "application/octet-stream";
+	        response.setContentType(contentType);
+	        OutputStream out = response.getOutputStream();
+	        FileInputStream in = new FileInputStream(file);
+	        // copy from in to out
+	        IOUtils.copy(in, out);
+	        out.close();
+	        in.close();
+	    }else {
+	        throw new FileNotFoundException();
+	    }*/
+
+		
+		
+		
 		
 	}
 
