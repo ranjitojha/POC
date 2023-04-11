@@ -1,19 +1,16 @@
 #app.yml file src/main/resources
     
-runtime: java11
+runtime: java
 env: flex
-  
-handlers:  
-    - url: /.*
-    script: this field is required, but ignored
-    secure: always
+
+runtime_config:
+    operating_system: "ubuntu18"
+    runtime_version: "11"
+
 manual_scaling:
     instances: 1
-    
-env_variables:
-    APP_STORAGE: /tmp
-   
+ 
 resources:
     cpu: 2
     memory_gb: 2.3
-    disk_size_gb: 5
+    disk_size_gb: 10
