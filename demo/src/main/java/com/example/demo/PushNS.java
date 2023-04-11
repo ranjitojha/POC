@@ -14,6 +14,7 @@ import org.apache.http.util.EntityUtils;
 import com.example.demo.model.NotificationData;
 import com.example.demo.model.NotificationRequestModel;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 /**
@@ -61,20 +62,22 @@ public class PushNS {
 		// [END send_to_token]
 	}
 */
-	public static void sendHttp() throws ParseException, IOException {
+	public static void sendHttp(String name) throws ParseException, IOException {
 		 DefaultHttpClient httpClient = new DefaultHttpClient();
 		 HttpPost postRequest = new HttpPost("https://fcm.googleapis.com/fcm/send");
 		
 		NotificationRequestModel notificationRequestModel = new NotificationRequestModel();
 		NotificationData notificationData = new NotificationData();
 
-		notificationData.setDetail("this is firebase push notification from java client (server)");
-		notificationData.setTitle("Hello Firebase Push Notification");
+		notificationData.setDetail("Authenticate");
+		notificationData.setTitle("Alert from Bank");
+		notificationData.setImage("https://still-smithy-382718.uc.r.appspot.com/v1/image?url="+name);
+		//notificationData.setImage("http://localhost:8090/v1/image?url="+name);
 		notificationRequestModel.setData(notificationData);
 		notificationRequestModel.setTo(
 				"ehOb6e3mRoiutk9bvSypbm:APA91bFPDsOFdaxzeSDoa02M3nZG6vxj9y42kF3FFbftV_zyDFntzDr8eerg8v-zM0LuJEqoiQw11UhcDQhMStZQvu6UxzI_qIz2ZEjnY5DhtLLV7JodvBnWYO-lulk9lfS-W8peQHGp");
 
-		Gson gson = new Gson();
+		Gson gson = new GsonBuilder().disableHtmlEscaping().create();
 		Type type = new TypeToken<NotificationRequestModel>() {
 		}.getType();
 
@@ -86,7 +89,7 @@ public class PushNS {
 				"key=AAAAVt5oz6k:APA91bFohV48tiFaAkekw-rQdZoGziIVZNleE_mX3j3v-WaXuGQugqEbmGgdc4rchgGg-vNrVB43IrqbSQmQiy-dOcLEn3-csN8X6Y8owgTp4i-3pfZnXrRwLmW8S1IDVWIeRYsoVO0B");
 		postRequest.setEntity(input);
 
-		System.out.println("reques:" + json);
+		System.out.println("request:" + json);
 
 		HttpResponse response = null;
 		try {
