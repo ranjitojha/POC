@@ -12,8 +12,19 @@ public class NotificationData {
 
     @SerializedName("title")
     private String mTitle;
+    
+    @SerializedName("image")
+    private String image;
 
-    public String getDetail() {
+    public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
+	}
+
+	public String getDetail() {
         return mDetail;
     }
 
